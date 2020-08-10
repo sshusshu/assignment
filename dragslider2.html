@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="Generator" content="EditPlus®">
+    <meta name="Author" content="">
+    <meta name="Keywords" content="">
+    <meta name="Description" content="">
+    <title>Document</title>
+    <style>
+        *{margin: 0;padding: 0;list-style:none;}
+        .slide-container{
+            width: 80%;
+            padding: 10%;
+            overflow: hidden;
+        }
+        .slide-container ul{
+            display:flex;
+        }
+        .slide-container ul li{
+            position: relative;
+        }
+        .slide-container ul li h1{
+            position: absolute;
+            top: 50%;left: 50%;
+            transform:translate(-50%,-50%);
+            z-index: 10;
+            color: #fff;
+        }
+        .slide-container ul li img{
+            filter:brightness(60%);
+            width:100%;
+        }
+    </style>
+</head>
+<body>
+<div class="slide-container">
+    <ul>
+        <li>
+            <img src="./img/test.png" alt="">
+            <h1>1</h1>
+        </li>
+        <li>
+            <img src="./img/test.png" alt="">
+            <h1>2</h1>
+        </li>
+        <li>
+            <img src="./img/test.png" alt="">
+            <h1>3</h1>
+        </li>
+        <li>
+            <img src="./img/test.png" alt="">
+            <h1>4</h1>
+        </li>
+        <li>
+            <img src="./img/test.png" alt="">
+            <h1>5</h1>
+        </li>
+    </ul>
+</div>
+<script>
+
+
+    const widthStandard = 90;
+    const marginStandard = 10;
+    const slideWrap = document.querySelector('.slide-container')
+    const container = slideWrap.querySelector('ul');
+    const slides = container.querySelectorAll('li');
+
+
+    /********************************* Image size *************************************/
+
+
+    container.style.width = (slides.length *  widthStandard)+'%';
+    slides.forEach((slide)=>{
+        slide.style.width = (widthStandard/slides.length)+'%';
+        slide.style.margin = '0 ' + (marginStandard/(slides.length*2))+'%';
+    })
+
+
+    /********************************* Variable *************************************/
+
+    let startX = 0;
+    let downX = 0;
+    let currentX = 0;
+    let idx = 0;
+    let moveX=0;
+    let isDrag = false;
+    const slideWidth = container.offsetWidth/slides.length
+
+    /********************************* Function *************************************/
+
+    function mouseDownHandler(e){
+        e.preventDefault();
+        downX = e.clientX;
+        startX = currentX + e.clientX;
+        slideWrap.addEventListener('mousemove', mouseMoveHandler)
+    }
+    function mouseMoveHandler(e){
+        isDrag = true;
+        moveX = downX - e.clientX;
+        currentX= startX - e.clientX;
+        setX(e)
+    }
+    function mouseUpHandler(e){
+        isDrag = false;
+        if (moveX>0){
+            idx = Math.ceil(currentX/slideWidth);
+        }else{
+            idx = Math.floor(currentX/slideWidth);
+        }
+
+        currentX = slideWidth * idx
+        setX(e)
+        slideWrap.removeEventListener('mousemove', mouseMoveHandler)
+    }
+    function mouseLeaveHandler(e){
+        slideWrap.removeEventListener('mousemove', mouseMoveHandler)
+    }
+
+    function setX(e){
+        //currentX = startX - e.clientX;
+        if(currentX < 0){currentX = 0;}
+        if(currentX > container.offsetWidth-innerWidth){
+            currentX = container.offsetWidth-innerWidth + (innerWidth/4);
+        }
+        if(!isDrag){
+            container.style.transition = 'transform 0.5s ease-out'
+        }else{
+            container.style.transition = 'transform 0.0s ease-out'
+        }
+        container.style.transform = `translate3d(${-currentX}px,0px,0px)`
+    }
+
+
+    /********************************* Event Listener *************************************/
+
+    slideWrap.addEventListener('mousedown', mouseDownHandler)
+    slideWrap.addEventListener('mouseup', mouseUpHandler)
+    slideWrap.addEventListener('mouseleave', mouseLeaveHandler)
+
+
+</script>
+</body>
+</html>
