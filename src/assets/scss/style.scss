@@ -61,10 +61,20 @@ body::-webkit-scrollbar{
     justify-content: space-between;
     align-items: center;
 }
-.btn-group .center{
+.btn-group .center {
     display: inline-block;
     width: 1px;
     height: 37px;
     background: #B1B1B1;
 }
+.prev, .next{
+    transition:transform 0.5s ease-in-out;
+    transform: scale(1);
+    opacity:0.4;
+}
 
+.prev.active,
+.next.active{
+    transform: scale(2);
+    opacity:1;
+}
